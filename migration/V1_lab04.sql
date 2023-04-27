@@ -1,216 +1,192 @@
 CREATE DATABASE taxidb;
+CREATE SCHEMA data;
 
-CREATE TABLE uzytkownik (
-                            id serial PRIMARY KEY,
-                            imie varchar(100),
-                            nazwisko varchar(100),
-                            email varchar(100),
-                            nr_telefonu varchar(100)
+CREATE TABLE data.User (
+    id serial PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    surname VARCHAR(100) NOT NULL,
+    mail VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(100) NOT NULL
+);
+CREATE TABLE data.Passenger (
+    id serial PRIMARY KEY,
+    user_id INT UNIQUE NOT NULL,
+    prefer_payment INT
+);
+CREATE TABLE data.PassengrtRating (
+    id serial PRIMARY KEY,
+    behavior INT NOT NULL,
+    on_time INT NOT NULL,
+    passenger_id INT NOT NULL,
+    passing INT UNIQUE NOT NULL
+);
+CREATE TABLE data.DriverRating (
+    id serial PRIMARY KEY,
+    skills INT NOT NULL,
+    car_condition INT NOT NULL,
+    regulations INT NOT NULL,
+    driver_id INT NOT NULL,
+    passing_id INT NOT NULL
+);
+CREATE TABLE data.Driver (
+    id serial PRIMARY KEY,
+    photo BYTEA,
+    user_id INT UNIQUE NOT NULL
+);
+CREATE TABLE data.DriverCar (
+    id serial PRIMARY KEY,
+    plate_number VARCHAR(25),
+    color VARCHAR(25),
+    car_id INT NOT NULL,
+    driver_id INT NOT NULL
+);
+CREATE TABLE data.Car (
+    id serial PRIMARY KEY,
+    brand VARCHAR(100) NOT NULL,
+    model VARCHAR(100) NOT NULL,
+    car_type_id INT NOT NULL
+);
+CREATE TABLE data.CarType (
+    id serial PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+CREATE TABLE data.Passing (
+    id serial PRIMARY KEY,
+    distance DECIMAL NOT NULL,
+    driver_id INT NOT NULL,
+    passenger_id INT NOT NULL,
+    payment_id INT UNIQUE NOT NULL,
+    drivercar_id INT NOT NULL,
+    pickup_adress_id INT NOT NULL,
+    destynation_adrees_id INT NOT NULL
+);
+CREATE TABLE data.Payment_type (
+    id serial PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+CREATE TABLE data.Payment (
+    id serial PRIMARY KEY,
+    m_value MONEY NOT NULL,
+    payment_type_id INT NOT NULL
+);
+CREATE TABLE data.Adress (
+    id serial PRIMARY KEY,
+    street VARCHAR(100) NOT NULL,
+    building VARCHAR(25),
+    appartment VARCHAR(25),
+    post_code VARCHAR(25) NOT NULL,
+    city VARCHAR(25) NOT NULL,
+    country VARCHAR(25) NOT NULL,
+    range_id INT UNIQUE NOT NULL 
+);
+CREATE TABLE data.Range (
+    id serial PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE pasazer (
-                         id serial PRIMARY KEY,
-                         uzytkownik_id int UNIQUE ,
-                         preferowanytyppłatności int
-);
-
-CREATE TABLE ocenapasażera (
-                               id serial PRIMARY KEY,
-                               zachowanie int NOT NULL,
-                               terminowość int NOT NULL,
-                               pasażer_id int NOT NULL,
-                               przejazd_id int UNIQUE NOT NULL
-);
-
-CREATE TABLE ocenakierowcy (
-                               id serial PRIMARY KEY,
-                               umiejetności int NOT NULL,
-                               stan_amochodu int NOT NULL,
-                               przestrzeganie_przepisów int NOT NULL,
-                               kierowca_id int NOT NULL,
-                               przejazd_id int UNIQUE NOT NULL
-);
-
-CREATE TABLE kierowca (
-                          id serial PRIMARY KEY,
-                          zdjęcie bytea,
-                          uzytkownik_id int UNIQUE NOT NULL
-);
-
-CREATE TABLE samochódkierowcy (
-                                  id serial PRIMARY KEY,
-                                  nr_rejestracyjny varchar(25),
-                                  kolor varchar(25),
-                                  samochód_id int NOT NULL,
-                                  kierowca_id int NOT NULL
-);
-
-CREATE TABLE samochód (
-                          id serial PRIMARY KEY,
-                          marka varchar(100),
-                          model varchar(100),
-                          typpojazdu_id int NOT NULL
-);
-
-CREATE TABLE typpojazdu (
-                            id serial PRIMARY KEY,
-                            nazwa varchar(50) NOT NULL
-);
-
-CREATE TABLE address (
-                         id serial PRIMARY KEY,
-                         imię varchar(100),
-                         nazwisko varchar(100),
-                         email varchar(100),
-                         nr_telefonu varchar(100)
-);
-
-CREATE TABLE pojazd (
-                        id serial PRIMARY KEY,
-                        dystans float NOT NULL,
-                        kierowca_id int NOT NULL,
-                        pasażer_id int NOT NULL,
-                        płatność_id int UNIQUE NOT NULL,
-                        samochódKierowcy_id int NOT NULL,
-                        adres_odbior_id int NOT NULL,
-                        adres_destynacja_id int NOT NULL
-);
-
-CREATE TABLE typpłatności (
-                              id serial PRIMARY KEY,
-                              nazwa varchar(50) NOT NULL
-);
-
-CREATE TABLE płatność (
-                          id serial PRIMARY KEY,
-                          wartość money NOT NULL,
-                          typPłatności_id int NOT NULL
-);
-
-CREATE TABLE adres (
-                       id serial PRIMARY KEY,
-                       ulica varchar(100) NOT NULL,
-                       numer_domu varchar(25),
-                       numer_mieszkania varchar(25),
-                       kod_pocztowy varchar(25) NOT NULL,
-                       miasto varchar(25) NOT NULL,
-                       kraj varchar(25) NOT NULL,
-                       obszar_id int UNIQUE NOT NULL
-);
-
-CREATE TABLE obszar (
-                        id serial PRIMARY KEY,
-                        nazwa varchar(255) NOT NULL
-);
 
 INSERT INTO
-    uzytkownik (imie, nazwisko, email, nr_telefonu)
+    data.User (id, name, surname, mail, phone_number)
 VALUES
-    ('Tomasz', 'Zawadzki', 'asd@wp.pl', '123456789'),
-    ('Darek', 'Długosz', 'ddlu@ic.pl', '162578237'),
-    ('Kaya', 'Fisher', 'mrta@gb.com', '801136476');
+    ('1', 'MIKOLAJ', 'JAKUBEK', 'jakubekmikolaj@gmail.com', '604347565'),
+    ('2', 'NIKOLAJ', 'KADLUBEK', 'jakuFWETWEmikolaj@gmail.com', '604555565'),
+    ('3', 'JAKUB', 'KOKO', 'jakubekmikolaj@gmail.com', '604347444'),
+    ('4', 'WLADEK', 'KLOKO', 'jakubekmikolaj@gmail.com', '604787565'),
+    ('5', 'SPADEK', 'LOKKO', 'jakubekmikolaj@gmail.com', '604989565');
+
 
 INSERT INTO
-    pasazer (uzytkownik_id, preferowanytypplatnosci)
+    data.Passenger (id, user_id, prefer_payment)
 VALUES
-    ('1', '1'),
-    ('2', '2'),
-    ('3','1');
+    ('1', '1', 'CARD'),
+    ('2', '2', 'CARD'),
+    ('3', '3', 'CASH'),
+    ('4', '4', 'CARD'),
+    ('5', '5', 'CASH');
 
 INSERT INTO
-    ocenapasazera (zachowanie, terminowosc, pasazer_id, przejazd_id)
+    data.PassengrtRating (id, behavior, on_time, passenger_id, passing)
 VALUES
-    ('4', '4', '1', '12'),
-    ('3', '5', '2', '37'),
-    ('5', '5', '3', '76');
+    ('1', '4', '5', '1', '1'),
+    ('2', '6', '5', '2', '2'),
+    ('3', '4', '2', '3', '3'),
+    ('4', '4', '4', '4', '4'),
+    ('5', '1', '5', '5', '5');
 
 INSERT INTO
-    ocenakierowcy (umiejetnosci, stan_samochodu, przestrzeganie_przepisow, kierowca_id, przejazd_id)
+    data.DriverRating (id, skills, car_condition, regulations, driver_id, passing_id)
 VALUES
-    ('5', '5', '4', '3', '12'),
-    ('3', '2', '4', '2', '37'),
-    ('5', '5', '5', '1', '76');
+    ('1', '4', '5', '1', '1', '1'),
+    ('2', '6', '5', '2', '2', '2'),
+    ('3', '4', '2', '3', '3', '3'),
+    ('4', '4', '4', '4', '4', '4'),
+    ('5', '1', '5', '5', '5', '5');
+
+
 
 INSERT INTO
-    kierowca (zdjecie, uzytkownik_id)
+    data.Driver (id, photo, user_id)
 VALUES
-    ('1', '1'),
-    ('1', '2'),
-    ('1', '3');
+    ('1', '1.JPG', '1'),
+    ('2', '2.JPG', '2'),
+    ('3', '3.JPG', '3'),
+    ('4', '4.JPG', '4'),
+    ('5', '5.JPG', '5');
+
 
 INSERT INTO
-    samochodkierowcy (nr_rejestracyjny, kolor, samochod_id, kierowca_id)
+    data.DriverCar (id, plate_number, color, car_id, driver_id)
 VALUES
-    ('GD 45315', 'Czarny', '1', '2'),
-    ('KR 124GF', 'Srebrny', '2', '3'),
-    ('WY 561VS', 'Zielony', '3', '1');
+    ('1', 'NE2551J', 'RED', '1', '1'),
+    ('2', 'NE6661J', 'BLUE', '2', '2'),
+    ('3', 'WW2551J', 'RED', '3', '3'),
+    ('4', 'GD2511J', 'BLACK', '4', '4'),
+    ('5', 'NO2551J', 'BLACK', '5', '5');
 
 INSERT INTO
-    samochod (marka, model, typpojazdu_id)
+    data.Car (id, brand, model, car_type_id)
 VALUES
-    ('Mercedes', 'Vito', '4'),
-    ('Toyota', 'Prius', '2'),
-    ('Seat', 'Ibiza', '3');
+    ('1', 'SKODA', 'OCTAVIA', '1'),
+    ('2', 'SKODA', 'FABIA', '2'),
+    ('3', 'SKODA', 'FABIA', '3'),
+    ('4', 'VOLKSWAGEN', 'PASSAT', '4'),
+    ('5', 'BMW', '5_SERIES', '5');
+
 
 INSERT INTO
-    typpojazdu (nazwa)
+    data.CarType (id, name)
 VALUES
-    ('Kombi'),
-    ('Sedan'),
-    ('Cupe'),
-    ('Van');
+    ('1', 'SKODA'),
+    ('2', 'SKODA'),
+    ('3', 'SKODA'),
+    ('4', 'VOLKSWAGEN'),
+    ('5', 'BMW');
+
 
 INSERT INTO
-    pojazd (dystans, kierowca_id, pasazer_id, platnosc_id, samochodKierowcy_id, adres_odbior_id, adres_destynacja_id)
+    data.Passing (id, distance, driver_id, passenger_id, payment_id, drivercar_id, pickup_adress_id, destynation_adrees_id)
 VALUES
-    ('34', '1', '1','2','6','5','20'),
-    ('12', '8', '2','62','67','13','1'),
-    ('8', '4', '9','22','67','24','9');
+    ('1', '20', '1', '1', '1', '1', '1', '1'),
+    ('2', '40', '2', '2', '2', '2', '2', '2'),
+    ('3', '50', '3', '3', '3', '3', '3', '3'),
+    ('4', '70', '4', '4', '4', '4', '4', '4'),
+    ('5', '10', '5', '5', '5', '5', '5', '5');
+
 
 INSERT INTO
-    typplatnosci (nazwa)
+    data.Payment_type (id, name)
 VALUES
-    ('Karta'),
-    ('Gotówka'),
-    ('Voucher'),
-    ('Bon');
+    ('1', 'CARD'),
+    ('2', 'CARD'),
+    ('3', 'CASH'),
+    ('4', 'Cash'),
+    ('5', 'card');
 
 INSERT INTO
-    platnosc (wartosc, typplatnosci_id)
+    data.Payment (id, m_value, payment_type_id)
 VALUES
-    ('55','1'),
-    ('120','2'),
-    ('24','4');
-
-INSERT INTO
-    adres (ulica, numer_domu, numer_mieszkania, kod_pocztowy, miasto, kraj, obszar_id)
-VALUES
-    ('Łąkowa', '60', '55', '80-100', 'Gdańsk','Polska','1'),
-    ('Podwale Staromiejskie', '50', '51', '80-100', 'Gdańsk','Polska','2'),
-    ('Targ Drzewny', '8', '2', '80-100', 'Gdańsk','Polska','3');
-
-INSERT INTO
-    obszar (nazwa)
-VALUES
-    ('Śródmieście'),
-    ('Letnica'),
-    ('Łostowice');
-
-SELECT * FROM obszar;
-SELECT * FROM adres;
-SELECT * FROM uzytkownik;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    ('1', '20' , '1'),
+    ('2', '30' , '2'),
+    ('3', '44' , '3'),
+    ('4', '21' , '4'),
+    ('5', '12' , '5');

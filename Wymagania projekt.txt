@@ -1,0 +1,13 @@
+W ramach projektu
+Diagram
+Plik/pliki skryptowe bazydanych (nie dump)
+Upload do githuba
+Regóły prawidłowej struktury z lab1.
+Relacje
+Dane rzeczywiste (np. marka samochodu nie może być Balaś)
+widoki (mają łączyć dane)
+procedury
+trigery
+uprawnienia (granty)
+funkcja z tranzakcją
+All na dockerze

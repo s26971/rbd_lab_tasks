@@ -52,3 +52,9 @@ insert into data.range (id, name) values (29, 'Avenue');
 insert into data.range (id, name) values (20, 'Point');
 
 ROLLBACK;
+
+-- Zad2
+CREATE USER adam WITH PASSWORD 'Hasło';
+GRANT SELECT,INSERT,UPDATE,DELETE on data.car to adam;
+
+REVOKE INSERT,UPDATE,DELETE ON data.car FROM adam;
